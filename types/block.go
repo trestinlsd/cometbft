@@ -534,6 +534,7 @@ func (h *Header) ToProto() *cmtproto.Header {
 		LastResultsHash:    h.LastResultsHash,
 		LastCommitHash:     h.LastCommitHash,
 		ProposerAddress:    h.ProposerAddress,
+		EthHeight:          h.EthHeight,
 	}
 }
 
@@ -554,6 +555,7 @@ func HeaderFromProto(ph *cmtproto.Header) (Header, error) {
 	h.Version = ph.Version
 	h.ChainID = ph.ChainID
 	h.Height = ph.Height
+	h.EthHeight = ph.EthHeight
 	h.Time = ph.Time
 	h.Height = ph.Height
 	h.LastBlockID = *bi
