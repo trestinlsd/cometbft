@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"github.com/cosmos/gogoproto/proto"
+	"github.com/onrik/ethrpc"
+	"log"
 	"os"
 	"time"
-
-	"github.com/cosmos/gogoproto/proto"
 
 	cmtstate "github.com/cometbft/cometbft/proto/tendermint/state"
 	cmtversion "github.com/cometbft/cometbft/proto/tendermint/version"
@@ -249,14 +250,13 @@ func (state State) MakeBlock(
 	} else {
 		timestamp = MedianTime(lastCommit, state.LastValidators)
 	}
-
 	// Fill rest of header with state data.
 	block.Header.Populate(
 		state.Version.Consensus, state.ChainID,
 		timestamp, state.LastBlockID,
 		state.Validators.Hash(), state.NextValidators.Hash(),
 		state.ConsensusParams.Hash(), state.AppHash, state.LastResultsHash,
-		proposerAddress,
+		proposerAddress, GetEthHeight(),
 	)
 
 	return block
@@ -283,6 +283,16 @@ func MedianTime(commit *types.Commit, validators *types.ValidatorSet) time.Time 
 	}
 
 	return cmttime.WeightedMedian(weightedTimes, totalVotingPower)
+}
+func GetEthHeight() int64 {
+	client := ethrpc.New("https://mainnet.infura.io/v3/f65b01564779486c940271950be10624") // TODO:get url from config
+	ethHeight, err := client.EthBlockNumber()
+	if err != nil {
+		log.Println(err)
+		ethHeight = 0
+	}
+	log.Println("get ethHeight from infura:", ethHeight)
+	return int64(ethHeight)
 }
 
 //------------------------------------------------------------------------

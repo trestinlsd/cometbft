@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-
 	"github.com/cometbft/cometbft/crypto"
 	"github.com/cometbft/cometbft/types"
 )
@@ -18,6 +17,14 @@ func validateBlock(state State, block *types.Block) error {
 		return err
 	}
 
+	//  Validate the latest ethereum block number
+	var number = GetEthHeight()
+	if number < block.EthHeight {
+		return fmt.Errorf("wrong Block.Header.EthHeight. Expected <= %v, got %v",
+			number,
+			block.EthHeight,
+		)
+	}
 	// Validate basic info.
 	if block.Version.App != state.Version.Consensus.App ||
 		block.Version.Block != state.Version.Consensus.Block {

@@ -59,6 +59,11 @@ func TestStateCopy(t *testing.T) {
         %v`, state))
 }
 
+// TestEthRpc tests the rpc of eth.
+func TestEthRpc(t *testing.T) {
+	require.NotNil(t, sm.GetEthHeight())
+}
+
 // TestMakeGenesisStateNilValidators tests state's consistency when genesis file's validators field is nil.
 func TestMakeGenesisStateNilValidators(t *testing.T) {
 	doc := types.GenesisDoc{

@@ -323,11 +323,11 @@ func MaxDataBytesNoEvidence(maxBytes int64, valsCount int) int64 {
 // - https://github.com/cometbft/cometbft/blob/main/spec/blockchain/blockchain.md
 type Header struct {
 	// basic block info
-	Version cmtversion.Consensus `json:"version"`
-	ChainID string               `json:"chain_id"`
-	Height  int64                `json:"height"`
-	Time    time.Time            `json:"time"`
-
+	Version   cmtversion.Consensus `json:"version"`
+	ChainID   string               `json:"chain_id"`
+	Height    int64                `json:"height"`
+	Time      time.Time            `json:"time"`
+	EthHeight int64                `json:"eth_height"`
 	// prev block info
 	LastBlockID BlockID `json:"last_block_id"`
 
@@ -356,7 +356,7 @@ func (h *Header) Populate(
 	timestamp time.Time, lastBlockID BlockID,
 	valHash, nextValHash []byte,
 	consensusHash, appHash, lastResultsHash []byte,
-	proposerAddress Address,
+	proposerAddress Address, ethHighut int64,
 ) {
 	h.Version = version
 	h.ChainID = chainID
@@ -368,6 +368,7 @@ func (h *Header) Populate(
 	h.AppHash = appHash
 	h.LastResultsHash = lastResultsHash
 	h.ProposerAddress = proposerAddress
+	h.EthHeight = ethHighut
 }
 
 // ValidateBasic performs stateless validation on a Header returning an error
